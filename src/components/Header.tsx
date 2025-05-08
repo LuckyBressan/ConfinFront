@@ -1,31 +1,17 @@
-import React from "react";
-import { FaReact } from "react-icons/fa6";
+import { Separator } from "@/components/ui/separator"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 
-
-export default function Header({
-    userName,
-    userImage
-} : {
-    userName?: string,
-    userImage?: string,
-}) {
-    userName  = userName   || 'Não Logado!';
-    userImage = userImage  || './user.svg';
-
-    return (
-        <header className="flex flex-row justify-between shadow shadow-zinc-300 p-4">
-            <span className="header-logo flex flex-row items-center gap-3">
-                <FaReact className="text-4xl"></FaReact>
-                <p className="text-2xl">Confin Front</p>
-            </span>
-            <span className="flex flex-row gap-3 items-center">
-                <span className="header-user-image rounded-full bg-zinc-400 w-12 h-12 flex items-center justify-center">
-                    <img className="w-6 text-zinc-100" src={userImage} alt="" />
-                </span>
-                <span className="">
-                    {userName}
-                </span>
-            </span>
-        </header>
-    );
+export function Header() {
+  return (
+    <header className="group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">
+      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+        <SidebarTrigger className="-ml-1" />
+        <Separator
+          orientation="vertical"
+          className="mx-2 data-[orientation=vertical]:h-4"
+        />
+        <h1 className="text-base font-medium">Documents</h1>
+      </div>
+    </header>
+  )
 }
