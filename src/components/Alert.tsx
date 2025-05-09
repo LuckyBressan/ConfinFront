@@ -2,12 +2,7 @@ import { CircleCheck, CircleX, HelpCircle, TriangleAlert } from "lucide-react";
 
 import { Alert as AlertComponent, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-export enum AlertTypes {
-    SUCCESS = 'success',
-    ERROR   = 'error',
-    WARNING = 'warning',
-    INFO    = 'info',
-}
+import { AlertEnum } from "@/enums/AlertEnum";
 
 export default function Alert({
   title,
@@ -16,34 +11,33 @@ export default function Alert({
 }: {
   title: string;
   description: string;
-  type: AlertTypes
+  type: AlertEnum
 }) {
 
-    let icon;
-    let colorClass;
-
-    switch (type) {
-        case AlertTypes.SUCCESS:
-            icon = <CircleCheck className="h-4 w-4" />;
-            colorClass = "border-green-500 text-green-500";
-            break;
-        case AlertTypes.ERROR:
-            icon = <CircleX className="h-4 w-4" />;
-            colorClass = "border-red-500 text-red-500";
-            break;
-        case AlertTypes.WARNING:
-            icon = <TriangleAlert className="h-4 w-4" />;
-            colorClass = "border-yellow-500 text-yellow-500";
-            break;
-        case AlertTypes.INFO:
-        default:
-            icon = <HelpCircle className="h-4 w-4" />;
-            colorClass = "border-blue-500 text-blue-500";
-            break;
-    }
+    const {
+      color,
+      icon
+    } = {
+      [AlertEnum.SUCCESS]: {
+        icon : (<CircleCheck className="h-4 w-4" />),
+        color: 'green'
+      },
+      [AlertEnum.ERROR]: {
+        icon : (<CircleX className="h-4 w-4" />),
+        color: 'red'
+      },
+      [AlertEnum.WARNING]: {
+        icon : (<TriangleAlert className="h-4 w-4" />),
+        color: 'yellow'
+      },
+      [AlertEnum.INFO]: {
+        icon : (<HelpCircle className="h-4 w-4" />),
+        color: 'blue'
+      }
+    }[type]
 
   return (
-    <AlertComponent className={colorClass}>
+    <AlertComponent className={`border-${color}-500 text-${color}-500`}>
       {icon}
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>
