@@ -3,7 +3,11 @@ import api from "@/services/api";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-export default function DialogEstado() {
+export default function DialogEstado({
+  carregaEstados
+} : {
+  carregaEstados : () => Promise<void>
+}) {
   return (
     <DialogForm
       titleTrigger="Novo Estado"
@@ -13,16 +17,10 @@ export default function DialogEstado() {
       }}
       submit={{
         title: "Salvar",
-        action: async () => {
-          const sigla = document.getElementById("sigla") as HTMLInputElement;
-          const nome = document.getElementById("nome") as HTMLInputElement;
-          const estado = {
-            sigla: sigla.value,
-            nome: nome.value,
-          };
+        action: async (data) => {
+          const estado = data as { sigla: string, nome: string }
           await api.post("Estado", estado);
-          //Alterar o estado da tabela para atualizar os dados
-          // setEstados(await buscaEstados());
+          carregaEstados();
         },
       }}
       form={[

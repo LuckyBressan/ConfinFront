@@ -108,11 +108,6 @@ export const columns: ColumnDef<Estado>[] = [
   },
 ];
 
-export async function buscaEstados() {
-  const response = await api.get("Estado");
-  return response.data;
-}
-
 export function DataTableEstado() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -124,10 +119,13 @@ export function DataTableEstado() {
 
   const [estados, setEstados] = React.useState<Estado[]>([]);
 
+  async function carregaEstados() {
+    const response = await api.get("Estado");
+    setEstados(response.data);
+  }
+
   React.useEffect(() => {
-    (async () => {
-      setEstados(await buscaEstados());
-    })();
+    carregaEstados();
   }, []);
 
   const table = useReactTable({
@@ -160,7 +158,7 @@ export function DataTableEstado() {
           }
           className="max-w-sm"
         />
-        <DialogEstado/>
+        <DialogEstado carregaEstados={carregaEstados} />
       </div>
       <div className="rounded-md border">
         <Table>
