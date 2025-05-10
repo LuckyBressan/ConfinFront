@@ -9,19 +9,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { DialogClose } from "@radix-ui/react-dialog";
-import { CirclePlus } from "lucide-react"
 import type React from "react"
 import { cloneElement, isValidElement, useRef, useState } from "react";
 import Alert from "./Alert";
 import { AlertEnum } from "@/enums/AlertEnum";
 
 export default function DialogForm({
-    titleTrigger,
+    trigger = {},
     dialog,
     submit,
-    form,
+    form = [],
 } : {
-    titleTrigger: string;
+    trigger: {
+      info?: {
+        title: string;
+        icon : React.ReactNode;
+      };
+      obj?: React.ReactNode;
+    };
     dialog: {
         title: string;
         description: string;
@@ -30,7 +35,7 @@ export default function DialogForm({
         title: string;
         action: (data: Record<string, any>) => void;
     };
-    form: {
+    form?: {
         label: React.ReactNode;
         input: React.ReactNode;
     }[];
@@ -41,6 +46,13 @@ export default function DialogForm({
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const handleSubmit = async () => {
+
+    if(!form.length) {
+      await submit.action({})
+
+      setOpen(false)
+    }
+    
     let preenchidos = true;
 
     for (const key in inputRefs.current) {
@@ -84,14 +96,20 @@ export default function DialogForm({
     }
     return { label, input };
   });
+
+  const dialogTrigger = 
+  trigger?.obj 
+  ?? (
+    <Button variant="default">
+        {trigger?.info?.icon}
+        {trigger?.info?.title}
+    </Button>
+  )
   
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">
-            <CirclePlus />
-            {titleTrigger}
-        </Button>
+        {dialogTrigger}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
