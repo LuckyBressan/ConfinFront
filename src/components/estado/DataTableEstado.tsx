@@ -34,6 +34,8 @@ import {
 import DialogEstado from "./DialogEstado";
 import api from "@/services/api";
 
+import flags from "@/data/flags.json";
+
 export type Estado = {
   sigla: string;
   nome: string;
@@ -80,6 +82,20 @@ export const columns: ColumnDef<Estado>[] = [
       );
     },
     cell: ({ row }) => <div className="capitalize">{row.getValue("nome")}</div>,
+  },
+  {
+    accessorKey: "bandeira",
+    header: "Bandeira",
+    cell: ({ row }) => (
+      <div>
+        <img
+          className="size-15"
+          src={flags[row.getValue("sigla")]}
+          alt={`Bandeira do estado: ${row.getValue("nome")}`}
+          title={`Bandeira do estado: ${row.getValue("nome")}`}
+        />
+      </div>
+    ),
   },
   {
     id: "actions",
