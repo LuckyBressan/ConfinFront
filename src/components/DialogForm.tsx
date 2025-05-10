@@ -67,24 +67,24 @@ export default function DialogForm({
       Object.entries(inputRefs.current).map(([key, input]) => [key, input?.value])
     );
     await submit.action(data);
-  
+
     setOpen(false);
   };
 
   const enhancedForm = form.map(({ label, input }, index) => {
-    if (isValidElement(input) && input.props.id) {
+    if (isValidElement(input) && input?.props?.id) {
       return {
         label,
-        input: cloneElement(input, { 
+        input: cloneElement(input, {
           ref: (el: HTMLInputElement) => {
-            inputRefs.current[input.props.id] = el;
+            inputRefs.current[input?.props?.id] = el;
           },
         }),
       };
     }
     return { label, input };
   });
-  
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

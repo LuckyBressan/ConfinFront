@@ -8,6 +8,13 @@ export default function DialogEstado({
 } : {
   carregaEstados : () => Promise<void>
 }) {
+
+  function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
+    if(!isNaN(Number(e.key))) {
+      e.target.value = e.target.value.replace(/\d/g, "");
+    }
+  }
+
   return (
     <DialogForm
       titleTrigger="Novo Estado"
@@ -35,15 +42,10 @@ export default function DialogEstado({
               id="sigla"
               maxLength={2}
               required
+              onKeyUp={handleKeyUp}
               onChange={(e) => {
                 const input = e.target as HTMLInputElement;
                 input.value = input.value.toUpperCase();
-                const regex = /\d/;
-                if (regex.test(input.value)) {
-                  input.classList.add("border-red-500");
-                } else {
-                  input.classList.remove("border-red-500");
-                }
               }}
             />
           ),
@@ -54,7 +56,14 @@ export default function DialogEstado({
               Nome
             </Label>
           ),
-          input: <Input id="nome" required className="col-span-3" />,
+          input: (
+            <Input
+              id="nome"
+              required
+              className="col-span-3"
+              onKeyUp={handleKeyUp}
+            />
+          ),
         },
       ]}
     />
