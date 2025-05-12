@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/table";
 import DialogEstado from "./DialogEstado";
 import api from "@/services/api";
+import DialogForm from "../DialogForm";
 
 import flags from "@/data/flags.json";
 
@@ -116,7 +117,25 @@ export const columns: ColumnDef<Estado>[] = [
             {/* Fazer abrir o dialog de edição */}
             <DropdownMenuItem onClick={() => {}}>Alterar</DropdownMenuItem>
             {/* Fazer abrir o dialog de exclusão */}
-            <DropdownMenuItem onClick={() => {}}>Excluir</DropdownMenuItem>
+            <DialogForm
+              dialog={{
+                title: "Excluir Estado",
+                description: "Você tem certeza que deseja excluir o registro?"
+              }}
+              trigger={{
+                obj: (<DropdownMenuItem>Excluir</DropdownMenuItem>)
+              }}
+              submit={{
+                title: "Excluir",
+                action() {
+                  api.delete(`Estado/${estado.sigla}`).then(() => {
+                    carregaEstados(); // Recarrega os estados após a exclusão
+                  }).catch((error) => {
+                    console.error("Erro ao excluir o estado:", error);
+                  });
+                },
+              }}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       );

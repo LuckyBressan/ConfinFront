@@ -2,6 +2,7 @@ import DialogForm from "../DialogForm";
 import api from "@/services/api";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { CircleCheck } from "lucide-react";
 
 export default function DialogEstado({
   carregaEstados
@@ -17,7 +18,12 @@ export default function DialogEstado({
 
   return (
     <DialogForm
-      titleTrigger="Novo Estado"
+      trigger={{
+        info: {
+          icon: (<CircleCheck />),
+          title: "Novo Estado"  
+        }
+      }}
       dialog={{
         title: "Incluir Estado",
         description: "Informe os dados do estado.",
