@@ -51,6 +51,7 @@ export default function DialogForm({
       await submit.action({})
 
       setOpen(false)
+      return
     }
 
     let preenchidos = true;
@@ -71,7 +72,7 @@ export default function DialogForm({
         description="Os campos obrigatório não foram preenchidos."
         type={AlertEnum.WARNING}
       />
-      return;
+      return
     }
 
     // Mapeia os valores para enviar
@@ -99,12 +100,20 @@ export default function DialogForm({
 
   const dialogTrigger =
   trigger?.obj
-  ?? (
-    <Button variant="default">
-        {trigger?.info?.icon}
-        {trigger?.info?.title}
-    </Button>
-  )
+    ? cloneElement(trigger.obj as React.ReactElement, {
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen(true);
+        },
+      })
+    : (
+        <Button variant="default" onClick={() => setOpen(true)}>
+          {trigger?.info?.icon}
+          {trigger?.info?.title}
+        </Button>
+      );
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

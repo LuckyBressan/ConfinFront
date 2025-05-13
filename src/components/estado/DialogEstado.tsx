@@ -2,12 +2,17 @@ import DialogForm from "../DialogForm";
 import api from "@/services/api";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { CircleCheck } from "lucide-react";
+import { CirclePlus } from "lucide-react";
+import type { Estado } from "@/@types/Estado";
+import { useEstadoContext } from "./EstadoProvider";
 
 export default function DialogEstado({
-  carregaEstados
+  alterar
 } : {
-  carregaEstados : () => Promise<void>
+  alterar?: {
+    trigger: React.ReactNode;
+    dados  : Estado;
+  }
 }) {
 
   function handleKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -16,24 +21,29 @@ export default function DialogEstado({
     }
   }
 
+  const { carregaEstados } = useEstadoContext();
+
+  const title = alterar ? "Alterar" : "Incluir"
+
   return (
     <DialogForm
       trigger={{
+        obj: alterar?.trigger,
         info: {
-          icon: (<CircleCheck />),
-          title: "Novo Estado"  
+          icon: (<CirclePlus />),
+          title: `${title} Estado`
         }
       }}
       dialog={{
-        title: "Incluir Estado",
-        description: "Informe os dados do estado.",
+        title: `${title} Estado`,
+        description: "Informe os dados...",
       }}
       submit={{
-        title: "Salvar",
+        title: alterar ? "Alterar" : "Salvar",
         action: async (data) => {
-          const estado = data as { sigla: string, nome: string }
-          await api.post("Estado", estado);
-          carregaEstados();
+          const estado = data as Estado
+          await api[alterar ? "put" : "post"]("Estado", estado)
+          carregaEstados()
         },
       }}
       form={[
@@ -48,6 +58,8 @@ export default function DialogEstado({
               id="sigla"
               maxLength={2}
               required
+              disabled={alterar ? true : false}
+              value={alterar?.dados.sigla}
               onKeyUp={handleKeyUp}
               onChange={(e) => {
                 const input = e.target as HTMLInputElement;
@@ -66,6 +78,7 @@ export default function DialogEstado({
             <Input
               id="nome"
               required
+              defaultValue={alterar?.dados.nome}
               className="col-span-3"
               onKeyUp={handleKeyUp}
             />
