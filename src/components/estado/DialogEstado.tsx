@@ -4,7 +4,11 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CirclePlus } from "lucide-react";
 import type { Estado } from "@/@types/Estado";
+
 import { useEstadoContext } from "./EstadoProvider";
+import { useAlert } from "../AlertProvider";
+import { AlertEnum } from "@/enums/AlertEnum";
+
 
 export default function DialogEstado({
   alterar
@@ -22,6 +26,7 @@ export default function DialogEstado({
   }
 
   const { carregaEstados } = useEstadoContext();
+  const { showAlert } = useAlert();
 
   const title = alterar ? "Alterar" : "Incluir"
 
@@ -43,6 +48,10 @@ export default function DialogEstado({
         action: async (data) => {
           const estado = data as Estado
           await api[alterar ? "put" : "post"]("Estado", estado)
+          showAlert({
+            title: alterar ? "Alterado com sucesso!" : "Incluído com sucesso!",
+            description: `O estado foi ${alterar ? 'alterado' : 'incluído'} com sucesso.`
+          }, AlertEnum.SUCCESS)
           carregaEstados()
         },
       }}

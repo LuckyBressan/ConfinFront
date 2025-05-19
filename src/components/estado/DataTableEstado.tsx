@@ -19,6 +19,8 @@ import flags from "@/data/flags.json";
 import type { Estado } from "@/@types/Estado";
 import { useEstadoContext } from "./EstadoProvider";
 import DataTable from "../DataTable";
+import { useAlert } from "../AlertProvider";
+import { AlertEnum } from "@/enums/AlertEnum";
 
 const columns: ColumnDef<Estado>[] = [
   {
@@ -82,6 +84,8 @@ const columns: ColumnDef<Estado>[] = [
     cell: ({ row }) => {
       const estado = row.original;
       const { carregaEstados } = useEstadoContext();
+      const { showAlert } = useAlert()
+
 
       return (
         <DropdownMenu>
@@ -113,6 +117,10 @@ const columns: ColumnDef<Estado>[] = [
                 action: () => {
                   console.log('delete')
                   api.delete(`Estado/${estado.sigla}`).then(() => {
+                    showAlert({
+                      title: "Exclusão feita!",
+                      description: 'Estado foi excluído com sucesso.'
+                    }, AlertEnum.SUCCESS)
                     carregaEstados(); // Recarrega os estados após a exclusão 
                   }).catch((error) => {
                     console.error("Erro ao excluir o estado:", error);
@@ -146,7 +154,7 @@ export default function DataTableEstado() {
           )
         ]}
         actions={[
-          (<DialogEstado />)
+          (<DialogEstado key={0} />)
         ]}
       />
     </>
